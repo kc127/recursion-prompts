@@ -7,31 +7,90 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+  if (n < 0){
+    return null;
+  }
+  if (n <= 1) {
+    return 1;
+  }
+  return n * factorial(n-1);
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+  if (array.length === 0) {
+    return 0;
+  }
+  return array[0] + sum(array.slice(1));
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  var total = 0;
+  for (var i = 0; i < array.length; i++) {
+    if (Array.isArray(array[i])) {
+      total += arraySum(array[i]);
+    } else {
+      total += array[i];
+    }
+  }
+  return total;
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  if (n < 0) {
+    n = parseInt(String(n).slice(1));
+  }
+  if (n === 0) {
+    return true;
+  }
+  if (n === 1) {
+    return false;
+  }
+  return isEven(n-2);
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+  var isNegative = false;
+  if (n < 0) {
+    isNegative = true;
+    n = parseInt(String(n).slice(1));
+  }
+  if (n <= 1) {
+    return 0;
+  }
+  if (isNegative) {
+    return -(n-1 + sumBelow(n-1));
+  } else {
+    return n-1 + sumBelow(n-1);
+  }
+
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+  var list = [];
+  if (x === y || x  === y - 1) {
+    return list;
+  }
+  if ( x < y) {
+    list.push( x + 1);
+    list = list.concat(range(x + 1, y));
+  }
+   else {
+     list.push( x - 1);
+     list = list.concat(range(x - 1, y));
+   }
+
+
+  return list;
 };
 
 // 7. Compute the exponent of a number.
@@ -40,6 +99,10 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+  if (exp === 0) {
+    return 1;
+  }
+  return base * exponent(base, exp-1);
 };
 
 // 8. Determine if a number is a power of two.
@@ -51,6 +114,10 @@ var powerOfTwo = function(n) {
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+  if (string.length <= 1) {
+    return string;
+  }
+  return reverse(string.slice(1)) + string[0];
 };
 
 // 10. Write a function that determines if a string is a palindrome.
@@ -93,6 +160,15 @@ var compareStr = function(str1, str2) {
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
 var createArray = function(str) {
+  var letters = [];
+
+    if(str.length === 0) {
+      return letters;
+    }
+    letters.push(str[0]);
+    letters = letters.concat(createArray(str.slice(1)));
+
+    return letters;
 };
 
 // 17. Reverse the order of an array
@@ -149,6 +225,7 @@ var replaceKeysInObj = function(obj, oldKey, newKey) {
 // fibonacci(5); // [0,1,1,2,3,5]
 // Note: The 0 is not counted.
 var fibonacci = function(n) {
+
 };
 
 // 26. Return the Fibonacci number located at index n of the Fibonacci sequence.
@@ -185,6 +262,16 @@ var nestedEvenSum = function(obj) {
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
 var flatten = function(array) {
+  var flatArray = [];
+
+  for (var i = 0; i < array.length; i++) {
+    if (Array.isArray(array[i])){
+      flatArray = flatArray.concat(flatten(array[i]));
+    } else {
+      flatArray.push(array[i]);
+    }
+  }
+  return flatArray;
 };
 
 // 31. Given a string, return an object containing tallies of each letter.

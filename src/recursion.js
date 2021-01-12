@@ -28,21 +28,22 @@ var sum = function(array) {
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
-  var total = 0;
+  var sum = 0;
+
   for (var i = 0; i < array.length; i++) {
     if (Array.isArray(array[i])) {
-      total += arraySum(array[i]);
+      sum += arraySum(array[i]);
     } else {
-      total += array[i];
+      sum += array[i];
     }
   }
-  return total;
+  return sum;
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
-  if (n < 0) {
-    n = parseInt(String(n).slice(1));
+  if (String(n).slice(0,1) === '-') {
+    n = Number(String(n).slice(1));
   }
   if (n === 0) {
     return true;
@@ -57,40 +58,35 @@ var isEven = function(n) {
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
-  var isNegative = false;
-  if (n < 0) {
-    isNegative = true;
-    n = parseInt(String(n).slice(1));
-  }
-  if (n <= 1) {
+
+  if (n === 1 || n === 0) {
     return 0;
   }
-  if (isNegative) {
-    return -(n-1 + sumBelow(n-1));
-  } else {
-    return n-1 + sumBelow(n-1);
-  }
-
+  return n < 0 ? (n + 1) + sumBelow(n + 1) : (n-1) + sumBelow(n-1)
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
-  var list = [];
-  if (x === y || x  === y - 1) {
-    return list;
-  }
-  if ( x < y) {
-    list.push( x + 1);
-    list = list.concat(range(x + 1, y));
-  }
-   else {
-     list.push( x - 1);
-     list = list.concat(range(x - 1, y));
-   }
+  var result = [];
 
+  if (x === y || x - y === 1 || x - y === -1) {
+    return result;
+  }
 
-  return list;
+  if (x < y) {
+    result.push(x+1);
+    result = result.concat(range(x + 1, y));
+    x + 1;
+  }
+
+  if (x > y) {
+    result.push(x-1);
+    result = result.concat(range(x - 1, y));
+    x - 1;
+  }
+
+  return result;
 };
 
 // 7. Compute the exponent of a number.
@@ -102,7 +98,12 @@ var exponent = function(base, exp) {
   if (exp === 0) {
     return 1;
   }
-  return base * exponent(base, exp-1);
+  if (exp < 0) {
+    return Number(((1/base) * exponent(base, exp + 1)).toFixed(5));
+  }
+  if (exp > 0 ) {
+    return base * exponent(base, exp-1);
+  }
 };
 
 // 8. Determine if a number is a power of two.
@@ -110,6 +111,13 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+  if (n === 0) {
+    return false;
+  }
+  if (n === 1) {
+    return true;
+  }
+  return powerOfTwo(n/2);
 };
 
 // 9. Write a function that reverses a string.
@@ -122,6 +130,19 @@ var reverse = function(string) {
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+  string = string.toLowerCase();
+
+  if (string.length === 1) {
+    return true;
+  }
+
+  if (string.length === 2) {
+    return string[0] === string[1];
+  }
+  if (string[0] === string.slice(-1)) {
+    return palindrome(string.slice(1,-1));
+  }
+  return false;
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -130,11 +151,40 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+  if (y === 0) {
+    return NaN;
+  }
+  if (x < 0) {
+    return -modulo(-x,y);
+  }
+
+  if (y < 0) {
+    return modulo(x, -y);
+  }
+
+  if (x < y ) {
+    return x;
+  }
+  return modulo(x-y, y);
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+  if (y === 0) {
+    return 0;
+  }
+  if (x < 0 && y < 0) {
+    return -(x - multiply(x, y + 1));
+  }
+  if ( x > 0 && y < 0) {
+    return x + multiply(x, y + 1);
+  }
+  if ( x < 0 && y > 0) {
+    return  - (x - multiply(x, y - 1));
+  } else {
+    return x + multiply(x, y - 1);
+  }
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
